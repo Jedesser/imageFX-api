@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  imagefx:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: imagefx-api:latest
+    container_name: imagefx-api
+    environment:
+      # Передаем Google Cookie из переменной окружения хоста
+      - GOOGLE_COOKIE=${GOOGLE_COOKIE}
+    volumes:
+      # Монтируем локальную директорию для сохранения изображений
+      - ./output:/output
+    # Переопределяем команду по умолчанию
+    # Раскомментируйте и измените для выполнения конкретной команды
+    # command: ["generate", "--prompt", "Тестовое изображение", "--cookie", "${GOOGLE_COOKIE}"]
+
+    # Для интерактивного использования
+    stdin_open: true
+    tty: true
