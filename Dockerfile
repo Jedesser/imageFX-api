@@ -14,6 +14,9 @@ COPY src/ ./src/
 COPY tsconfig.json ./
 RUN npm run build
 
+# Устанавливаем только production зависимости в отдельной директории
+RUN npm ci --omit=dev --prefix /app/prod
+
 # ===========================================
 # Stage 2: Production (Python + Node.js)
 # ===========================================
@@ -29,10 +32,8 @@ COPY --from=node:18-alpine /usr/lib /usr/lib
 RUN mkdir -p /app/imagefx
 COPY --from=node-builder /app/dist /app/imagefx/dist
 COPY --from=node-builder /app/package*.json /app/imagefx/
-
-# Устанавливаем Node.js зависимости для CLI (production only)
-WORKDIR /app/imagefx
-RUN npm ci --omit=dev && npm cache clean --force
+# Копируем production зависимости из builder
+COPY --from=node-builder /app/prod/node_modules /app/imagefx/node_modules
 
 # Возвращаемся в /app для FastAPI
 WORKDIR /app
