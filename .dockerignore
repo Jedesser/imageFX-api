@@ -7,6 +7,17 @@ yarn-error.log*
 # Build output
 dist/
 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
 # Git
 .git/
 .github/
